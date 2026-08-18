@@ -2,8 +2,6 @@
 // 状態を受け取って画面(DOM)に表示するだけを担当する。
 // おみくじを引くロジックは omikuji.ts、ボタンと処理の連携は main.ts が持つ。
 
-// なおちゃんみえますか
-
 import type { OmikujiResult } from "./omikuji";
 const resultElement = document.getElementById("result")!;
 
@@ -24,9 +22,8 @@ export function renderResult(result: OmikujiResult | null): void {
   // TODO（ステップ1）: ここに DOM 操作を書いて、画面に結果を表示する。
   if (result !== null) {
     resultElement.textContent = `${result}`;
-  }
-  else {
-    resultElement.textContent = "ここに結果が出ます";
+  } else {
+    resultElement.textContent = "ボタンを押してね";
   }
 }
 
