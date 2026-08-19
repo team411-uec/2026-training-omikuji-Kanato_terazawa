@@ -1,5 +1,7 @@
 body {
-  margin: 24px;
+  max-width: 50em;
+  margin: 0 auto;
+  padding: 1em;
   font-family: sans-serif;
   line-height: 1.6;
   background-color: #131823;

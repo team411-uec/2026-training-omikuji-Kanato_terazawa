@@ -63,14 +63,14 @@ export function addTodo(): void {
   const container = document.getElementById("input_column");
 
   if (originalDiv && container) {
-    // 3. 要素を中身ごと丸ごと複製する (true で子要素もすべてコピー)
+    //要素を中身ごと丸ごと複製する (true で子要素もすべてコピー)
     const clonedDiv = originalDiv.cloneNode(true) as HTMLDivElement;
     clonedDiv.removeAttribute("id");
 
     // 必要に応じて、複製した中身のinputのIDも削除・変更する
     const clonedInput = clonedDiv.querySelector("#todo");
     if (clonedInput) {
-      clonedInput.removeAttribute("id");
+      //clonedInput.removeAttribute("#todo");
       // (任意) コピーしたinputの中身を空にする場合
       (clonedInput as HTMLInputElement).value = "";
     }
