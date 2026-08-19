@@ -8,6 +8,7 @@
 export type OmikujiResult = "大吉" | "中吉" | "小吉" | "吉" | "末吉" | "凶";
 
 // 各結果を何枚ずつ箱に入れるかの比率。数値は自由に変えてよい。
+//下記の変更(splice)により運勢の比率となった
 export const omikujiRatios: Record<OmikujiResult, number> = {
   大吉: 5,
   中吉: 15,
@@ -22,6 +23,7 @@ export const omikujiRatios: Record<OmikujiResult, number> = {
 let tickets: OmikujiResult[] = [];
 
 // 箱の中身を omikujiRatios の比率どおりに入れ直す。
+//「完了！」ボタンでは使わないけど最初のくじの割り振りに要る
 export function resetOmikuji(): void {
   tickets = [];
 
@@ -33,6 +35,7 @@ export function resetOmikuji(): void {
   }
 
   console.log(`おみくじ箱をリセットしました。（合計 ${tickets.length} 枚）`);
+  console.log(tickets);
 }
 
 // 箱からランダムに1枚引いて返す。空のときは null を返す。
@@ -44,9 +47,33 @@ export function drawOmikuji(): OmikujiResult | null {
 
   const randomIdx = Math.floor(Math.random() * tickets.length);
   // splice は抜き出した要素の配列を返すので、その 0 番目を取り出す。
-  const drawnTicket = tickets.splice(randomIdx, 1)[0];
+  //const drawnTicket = tickets.splice(randomIdx, 1)[0];
+  //変更！くじの枚数はここでは決めずにタスクの数で決めるので、
+  // spliceによるカード削除を止めてdrawnTicketsを代替
+  const drawnTicket = tickets[randomIdx];
+  //console.log(tickets);
   return drawnTicket;
 }
 
 // 拡張ポイント（ステップ2以降）。必要になったら足す。
 //  - 残りくじ枚数を出す: tickets.length を返す関数をこのファイルに足す（tickets は外から読めない）。
+
+export function addTodo(): void {
+  const originalDiv = document.getElementById("todo_set");
+  const container = document.getElementById("input_column");
+
+  if (originalDiv && container) {
+    // 3. 要素を中身ごと丸ごと複製する (true で子要素もすべてコピー)
+    const clonedDiv = originalDiv.cloneNode(true) as HTMLDivElement;
+    clonedDiv.removeAttribute("id");
+
+    // 必要に応じて、複製した中身のinputのIDも削除・変更する
+    const clonedInput = clonedDiv.querySelector("#todo");
+    if (clonedInput) {
+      clonedInput.removeAttribute("id");
+      // (任意) コピーしたinputの中身を空にする場合
+      (clonedInput as HTMLInputElement).value = "";
+    }
+    container.appendChild(clonedDiv);
+  }
+}

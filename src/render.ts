@@ -2,6 +2,7 @@
 // 状態を受け取って画面(DOM)に表示するだけを担当する。
 // おみくじを引くロジックは omikuji.ts、ボタンと処理の連携は main.ts が持つ。
 
+import Sortable from "sortablejs";
 import type { OmikujiResult } from "./omikuji";
 const resultElement = document.getElementById("result")!;
 
@@ -23,10 +24,21 @@ export function renderResult(result: OmikujiResult | null): void {
   if (result !== null) {
     resultElement.textContent = `${result}`;
   } else {
-    resultElement.textContent = "ボタンを押してね";
+    resultElement.textContent = "_";
   }
 }
 
 // 拡張ポイント（ステップ2以降）。必要になったら関数を足す。
 //  - 履歴をリスト表示する: document.createElement で <li> を作り、<ul id="history"> に足す関数。
 //  - 残りくじ枚数を表示する: omikuji.ts に残数を返す関数を足したうえで表示用の関数を足す。
+
+// SortableJSによる表の並べ替え
+const inputColumn = document.getElementById("input_column");
+if (inputColumn) {
+  new Sortable(inputColumn, {
+    handle: "svg", // handle's selector
+    animation: 150,
+  });
+}
+
+//「タスクを追加」ボタン

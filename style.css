@@ -9,20 +9,30 @@ body {
 .omikuji-result {
   margin: 16px 0;
   padding: 16px;
-  font-size: 32px;
   text-align: center;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 0.5em;
+  background: #0000005a;
 }
 
+.luck {
+  font-size: 3em;
+}
+.task_result {
+  background-color: #232c3f;
+  border-radius: 0.5em;
+  border: 1px solid #ccc;
+  min-height: 6em;
+}
 .omikuji-controls button {
   margin-right: 8px;
   padding: 8px 16px;
   font-size: 16px;
   cursor: pointer;
 }
+
 #draw-button {
-  background-color: #ff5623;
+  background-color: #02a2e1;
   color: white;
   border: none;
   border-radius: 4px;
@@ -30,9 +40,9 @@ body {
   font-size: 16px;
   cursor: pointer;
   position: relative;
-
+  margin-top: 5px;
   /* 軽い立体感（2pxの影） */
-  box-shadow: 0 2px 0 #b33a1c;
+  box-shadow: 0 2px 0 #004561;
 }
 
 /* 修正：:hover ではなく、JSでクラスがついた瞬間だけ実行する */
@@ -44,21 +54,21 @@ body {
 @keyframes dipAndReturn-draw {
   0% {
     transform: translateY(0);
-    box-shadow: 0 2px 0 #9b3414;
+    box-shadow: 0 2px 0 #004561;
   }
   50% {
     transform: translateY(2px);
-    box-shadow: 0 0 0 #9b3414;
+    box-shadow: 0 0 0 #004561;
   }
   100% {
     transform: translateY(0);
-    box-shadow: 0 2px 0 #9b3414;
+    box-shadow: 0 2px 0 #004561;
   }
 }
 
-#reset-button {
+#done-button {
   /* 通常時の見た目 */
-  background-color: #3561f3;
+  background-color: #2a62dc;
   color: #fff;
   padding: 8px 16px;
   font-size: 16px;
@@ -66,29 +76,29 @@ body {
   border-radius: 6px;
   cursor: pointer;
   position: relative;
-
+  margin-top: 5px;
   /* 軽い立体感（2pxの影） */
-  box-shadow: 0 2px 0 #14257c;
+  box-shadow: 0 2px 0 #203560;
 }
 
 /* 修正：:hover ではなく、JSでクラスがついた瞬間だけ実行する */
-#reset-button.active-dip {
-  animation: dipAndReturn-reset 0.2s ease;
+#done-button.active-dip {
+  animation: dipAndReturn-done 0.2s ease;
 }
 
 /* アニメーションの流れ（内容はそのまま） */
-@keyframes dipAndReturn-reset {
+@keyframes dipAndReturn-done {
   0% {
     transform: translateY(0);
-    box-shadow: 0 2px 0 #14257c;
+    box-shadow: 0 2px 0 #203560;
   }
   50% {
     transform: translateY(2px);
-    box-shadow: 0 0 0 #14257c;
+    box-shadow: 0 0 0 #203560;
   }
   100% {
     transform: translateY(0);
-    box-shadow: 0 2px 0 #14257c;
+    box-shadow: 0 2px 0 #203560;
   }
 }
 
@@ -99,6 +109,47 @@ body {
   padding: 0.2em;
   border-radius: 0.3em;
   display: flex;
+  flex-wrap: wrap;
+}
+/*タスク追加ボタン*/
+.task_add_button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#add-button {
+  /* 通常時の見た目 */
+  background-color: #2a62dc;
+  color: #fff;
+  padding: 8px 16px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  margin: 5px;
+  /* 軽い立体感（2pxの影） */
+  box-shadow: 0 2px 0 #203560;
+}
+
+#add-button.active-dip {
+  animation: dipAndReturn-done 0.2s ease;
+}
+
+/* アニメーションの流れ（内容はそのまま） */
+@keyframes dipAndReturn-done {
+  0% {
+    transform: translateY(0);
+    box-shadow: 0 2px 0 #203560;
+  }
+  50% {
+    transform: translateY(2px);
+    box-shadow: 0 0 0 #203560;
+  }
+  100% {
+    transform: translateY(0);
+    box-shadow: 0 2px 0 #203560;
+  }
 }
 
 /*右側入力表*/
@@ -106,6 +157,7 @@ body {
   flex: 1; /* 右側の空間をすべて埋める */
   display: flex;
   flex-direction: column; /* タスク項目を縦に並べる */
+  margin-left: 4px;
 }
 
 /*入力欄*/
@@ -113,6 +165,7 @@ input {
   background-color: #ffffff00;
   color: #ffffff;
   border: none;
+  width: 100%;
   height: 100%;
   font-size: 1em;
 }
@@ -122,7 +175,6 @@ input::placeholder {
 }
 input:focus {
   outline: none; /* 標準の枠線を消す */
-  border-color: #ff0000; /* 枠線の色を変える */
 }
 
 .input_section {
@@ -175,8 +227,4 @@ input:focus {
   stroke: #f7f4f4;
   stroke-width: 2;
   stroke-linecap: round;
-}
-
-#menu-toggle {
-  display: none; /* チェックボックスは隠す */
 }

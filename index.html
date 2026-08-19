@@ -15,45 +15,57 @@
 
   <body>
     <h1>運任せTodo</h1>
-    <p>あなたの「運」でタスクの優先順位を決定。</p>
+    <p>あなたの「運」で優先すべきタスクを決定。</p>
     <p>簡単なタスクを大吉の方に、つらいタスクを凶の方に割り当てよう。</p>
-    <p>※途中で運勢のタスクが空になったとき、近い運勢から引っ張る</p>
+    <p>入力欄右の「≡」をドラッグして並べ替え</p>
+    <div class="omikuji-result">
+      <div>あなたの運勢</div>
+      <div id="result" class="luck">_</div>
+      <div id="task-result" class="task_result">選ばれたタスク</div>
 
-    <div id="result" class="omikuji-result">ボタンを押してね</div>
-    <div id="task-result" class="omikuji-result">選ばれたタスク</div>
-
-    <div class="omikuji-controls">
-      <button
-        id="draw-button"
-        onmousedown="
-          this.classList.add('active-dip');
-          setTimeout(() => this.classList.remove('active-dip'), 200);
-        "
-      >
-        おみくじを引く
-      </button>
-      <button
-        id="reset-button"
-        onmousedown="
-          this.classList.add('active-dip');
-          setTimeout(() => this.classList.remove('active-dip'), 200);
-        "
-      >
-        リセット（役割をdoneか「やり直す」をする）
-      </button>
+      <div class="omikuji-controls">
+        <button
+          id="draw-button"
+          onmousedown="
+            this.classList.add('active-dip');
+            setTimeout(() => this.classList.remove('active-dip'), 200);
+          "
+        >
+          おみくじを引く
+        </button>
+        <button
+          id="done-button"
+          onmousedown="
+            this.classList.add('active-dip');
+            setTimeout(() => this.classList.remove('active-dip'), 200);
+          "
+        >
+          完了！
+        </button>
+      </div>
     </div>
 
     <div class="input_wrapper">
+      <button
+        class="task_add_button"
+        id="add-button"
+        onmousedown="
+          this.classList.add('active-dip');
+          setTimeout(() => this.classList.remove('active-dip'), 200);
+        "
+      >
+        タスクを追加
+      </button>
       <div class="gradition">
         <div class="gradition_daikichi">大<br />吉</div>
         <div class="vertical_line"></div>
-        <div class="gradition_daikyo">大<br />凶</div>
+        <div class="gradition_daikyo">凶</div>
       </div>
-      <div class="input_column">
-        <div class="input_section" draggable="true">
-          <input type="input" placeholder=" ここにタスクを入力" />
+
+      <div id="input_column" class="input_column">
+        <div id="todo_set" class="input_section">
+          <input type="input" placeholder=" ここにタスクを入力" id="todo" />
           <label class="hamburger" for="menu_toggle">
-            <input type="checkbox" id="menu-toggle" />
             <svg viewBox="0 0 32 32" width="32" height="32">
               <path class="line line-top" d="M4,10 L28,10" />
               <path class="line line-middle" d="M4,16 L28,16" />

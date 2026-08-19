@@ -5,13 +5,16 @@
 
 import { resetOmikuji, drawOmikuji } from "./omikuji";
 import { renderResult } from "./render";
+import { addTodo } from "./omikuji";
 
 function main(): void {
   // おみくじ箱を用意する（1回呼ぶと、くじが入った状態になる）。
   resetOmikuji();
 
   const drawButton = document.getElementById("draw-button");
-  const resetButton = document.getElementById("reset-button");
+  const doneButton = document.getElementById("done-button");
+
+  const addButton = document.getElementById("add-button");
 
   drawButton?.addEventListener("click", () => {
     const result = drawOmikuji();
@@ -20,11 +23,15 @@ function main(): void {
     renderResult(result);
   });
 
-  resetButton?.addEventListener("click", () => {
+  doneButton?.addEventListener("click", () => {
     resetOmikuji();
     // 表示を初期状態（結果なし）に戻す。
     renderResult(null);
   });
-}
 
+  addButton?.addEventListener("click", () => {
+    console.log("add-buttonの押下を検知");
+    addTodo();
+  });
+}
 main();
