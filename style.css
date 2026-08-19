@@ -92,21 +92,91 @@ body {
   }
 }
 
-.input-table {
-  float: left;
+/*タスク入力欄*/
+/*入力欄外枠*/
+.input_wrapper {
+  background-color: #0000005a;
+  padding: 0.2em;
+  border-radius: 0.3em;
   display: flex;
-  flex-wrap: wrap;
 }
 
-.input-table div {
-  color: #fff;
-  background-color: #2591d4;
-  border-radius: 5px;
-  padding: 20px 30px 20px 30px;
-  text-align: center;
-  padding: 20px;
-  margin: 5px;
+/*右側入力表*/
+.input_column {
+  flex: 1; /* 右側の空間をすべて埋める */
+  display: flex;
+  flex-direction: column; /* タスク項目を縦に並べる */
 }
-a:hover {
-  border: 1px solid #fff;
+
+/*入力欄*/
+input {
+  background-color: #ffffff00;
+  color: #ffffff;
+  border: none;
+  height: 100%;
+  font-size: 1em;
+}
+input::placeholder {
+  color: #ffffff;
+  font-size: 1em;
+}
+input:focus {
+  outline: none; /* 標準の枠線を消す */
+  border-color: #ff0000; /* 枠線の色を変える */
+}
+
+.input_section {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  background-color: #232c3f;
+  height: 2em;
+  text-align: center;
+  margin: 0.2em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-radius: 0.3em;
+  justify-content: space-between;
+  flex: 1;
+}
+
+/*タスクの運勢目盛*/
+.gradition {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1em;
+}
+.gradition_daikichi {
+  display: flex;
+}
+
+.vertical_line {
+  display: flex;
+  flex-grow: 1;
+  width: 0.07em;
+  background-color: #ffffff;
+  margin: 8px 0;
+}
+
+.gradition_daikyo {
+  display: flex;
+}
+
+/*タスク入力欄横のドラッグボタン*/
+.hamburger {
+  display: flex;
+}
+.hamburger svg {
+  cursor: pointer;
+}
+.hamburger .line {
+  fill: none;
+  stroke: #f7f4f4;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+#menu-toggle {
+  display: none; /* チェックボックスは隠す */
 }

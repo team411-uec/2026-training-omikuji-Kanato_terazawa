@@ -16,12 +16,11 @@
   <body>
     <h1>運任せTodo</h1>
     <p>あなたの「運」でタスクの優先順位を決定。</p>
-    <p>
-      簡単なタスクを大吉の方に、つらいタスクを凶の方に置いて、全部の運勢にタスクを割り当てよう。
-    </p>
+    <p>簡単なタスクを大吉の方に、つらいタスクを凶の方に割り当てよう。</p>
     <p>※途中で運勢のタスクが空になったとき、近い運勢から引っ張る</p>
 
     <div id="result" class="omikuji-result">ボタンを押してね</div>
+    <div id="task-result" class="omikuji-result">選ばれたタスク</div>
 
     <div class="omikuji-controls">
       <button
@@ -43,24 +42,26 @@
         リセット（役割をdoneか「やり直す」をする）
       </button>
     </div>
-    <!--大吉＞吉＞中吉＞小吉＞末吉＞凶-->
 
-    <div class="input-table">
-      <div class="input-section">あああ</div>
-
-      <div class="input-section">あああ</div>
-      <div class="input-section">あああ</div>
-      <div class="input-section">あああ</div>
-    </div>
-    <div class="input-table">
-      <div class="input-section">いいい</div>
-      <div class="input-section">いいい</div>
-      <div class="input-section">いいい</div>
-    </div>
-    <div class="input-table">
-      <div class="input-section">ううう</div>
-      <div class="input-section">ううう</div>
-      <div class="input-section">ううう</div>
+    <div class="input_wrapper">
+      <div class="gradition">
+        <div class="gradition_daikichi">大<br />吉</div>
+        <div class="vertical_line"></div>
+        <div class="gradition_daikyo">大<br />凶</div>
+      </div>
+      <div class="input_column">
+        <div class="input_section" draggable="true">
+          <input type="input" placeholder=" ここにタスクを入力" />
+          <label class="hamburger" for="menu_toggle">
+            <input type="checkbox" id="menu-toggle" />
+            <svg viewBox="0 0 32 32" width="32" height="32">
+              <path class="line line-top" d="M4,10 L28,10" />
+              <path class="line line-middle" d="M4,16 L28,16" />
+              <path class="line line-bottom" d="M4,22 L28,22" />
+            </svg>
+          </label>
+        </div>
+      </div>
     </div>
 
     <div id="remaining" class="omikuji-remaining"></div>
