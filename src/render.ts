@@ -4,8 +4,9 @@
 
 import Sortable from "sortablejs";
 import type { OmikujiResult } from "./omikuji";
+import { drawTodo } from "./omikuji";
 const resultElement = document.getElementById("result")!;
-
+const resultTodo = document.getElementById("task-result")!;
 // ステップ1（最初の課題）: この関数を実装する。
 //
 // いまは「引く」ボタンを押すと開発者ツール(F12)の Console に
@@ -25,6 +26,15 @@ export function renderResult(result: OmikujiResult | null): void {
     resultElement.textContent = `${result}`;
   } else {
     resultElement.textContent = "_";
+  }
+}
+
+export function renderResultTodo(result: string): void {
+  drawTodo();
+  if (result != undefined) {
+    resultTodo.textContent = `${result}`;
+  } else {
+    resultTodo.textContent = "タスク無し！やることが無いのも寂しくない？";
   }
 }
 

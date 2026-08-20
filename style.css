@@ -20,11 +20,16 @@ body {
 .luck {
   font-size: 3em;
 }
-.task_result {
+.task_result_section {
   background-color: #232c3f;
   border-radius: 0.5em;
   border: 1px solid #ccc;
   min-height: 6em;
+}
+
+.task-result {
+  margin: 0 0.5em;
+  font-size: 1.1em;
 }
 .omikuji-controls button {
   margin-right: 8px;

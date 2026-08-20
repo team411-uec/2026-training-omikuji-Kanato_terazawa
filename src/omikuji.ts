@@ -8,7 +8,7 @@
 export type OmikujiResult = "大吉" | "中吉" | "小吉" | "吉" | "末吉" | "凶";
 
 // 各結果を何枚ずつ箱に入れるかの比率。数値は自由に変えてよい。
-//下記の変更(splice)により運勢の比率となった
+//下記の変更(splice削除)により運勢の比率となった
 export const omikujiRatios: Record<OmikujiResult, number> = {
   大吉: 5,
   中吉: 15,
@@ -39,11 +39,12 @@ export function resetOmikuji(): void {
 }
 
 // 箱からランダムに1枚引いて返す。空のときは null を返す。
+//前半はタスク選択処理
 export function drawOmikuji(): OmikujiResult | null {
-  if (tickets.length === 0) {
-    console.log("もうおみくじ箱は空っぽです！リセットしてください。");
-    return null;
-  }
+  // if (tickets.length === 0) {
+  //   console.log("もうおみくじ箱は空っぽです！リセットしてください。");
+  //   return null;
+  // }
 
   const randomIdx = Math.floor(Math.random() * tickets.length);
   // splice は抜き出した要素の配列を返すので、その 0 番目を取り出す。
@@ -55,14 +56,48 @@ export function drawOmikuji(): OmikujiResult | null {
   return drawnTicket;
 }
 
+export function drawTodo(): string {
+  const brank = getTodoValues().includes("");
+  if (getTodoValues().length == 1 && brank) {
+    console.log("タスク無し！やることが無いってのも寂しくない？");
+  }
+  //タスクリストから空欄を消して再度リスト出力
+  const TrueTodoValues = getTodoValues().filter((value) => {
+    return value != "";
+  });
+  //下記のrandomIdx処理に倣う
+  const randomIdxTodo = Math.floor(Math.random() * TrueTodoValues.length);
+  const drawnTodo = TrueTodoValues[randomIdxTodo];
+  console.log(drawnTodo, randomIdxTodo, Math.random() * TrueTodoValues.length);
+  console.log("タスクリスト", getTodoValues());
+  console.log("タスクリスト長さ", getTodoValues().length);
+  console.log("空欄抜きTodo", TrueTodoValues);
+  console.log("空欄抜きTodo長さ", TrueTodoValues.length);
+
+  return drawnTodo;
+}
+
 // 拡張ポイント（ステップ2以降）。必要になったら足す。
 //  - 残りくじ枚数を出す: tickets.length を返す関数をこのファイルに足す（tickets は外から読めない）。
 
+//下のgetTodoValuesはGithub Copilotにより生成
+//修正前： const inputs = document.querySelectorAll<HTMLInputElement>(".todo");
+//const values = Array.from(inputs).map((input) => input.value);
+
+//全タスクをリストとして取得（内容はmemo.mdを参照）
+export function getTodoValues(): string[] {
+  const inputs = document.querySelectorAll<HTMLInputElement>(".todo");
+  return Array.from(inputs).map((input) => input.value.trim());
+  //   .filter((value) => value !== "");
+}
+
 export function addTodo(): void {
+  console.log(getTodoValues());
+  const brank = getTodoValues().includes(""); //getTodoValuesに空欄があったらタスク追加は無効
+  console.log(brank);
   const originalDiv = document.getElementById("todo_set");
   const container = document.getElementById("input_column");
-
-  if (originalDiv && container) {
+  if (originalDiv && container && !brank) {
     //要素を中身ごと丸ごと複製する (true で子要素もすべてコピー)
     const clonedDiv = originalDiv.cloneNode(true) as HTMLDivElement;
     clonedDiv.removeAttribute("id");
@@ -74,6 +109,6 @@ export function addTodo(): void {
       // (任意) コピーしたinputの中身を空にする場合
       (clonedInput as HTMLInputElement).value = "";
     }
-    container.appendChild(clonedDiv);
+    container.prepend(clonedDiv);
   }
 }

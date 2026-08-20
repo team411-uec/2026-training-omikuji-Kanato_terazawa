@@ -21,7 +21,10 @@
     <div class="omikuji-result">
       <div>あなたの運勢</div>
       <div id="result" class="luck">_</div>
-      <div id="task-result" class="task_result">選ばれたタスク</div>
+      <div class="task_result_section">
+        <span>選ばれたタスク</span>
+        <p id="task-result" class="task-result">__________</p>
+      </div>
 
       <div class="omikuji-controls">
         <button
@@ -64,7 +67,12 @@
 
       <div id="input_column" class="input_column">
         <div id="todo_set" class="input_section">
-          <input type="input" placeholder=" ここにタスクを入力" id="todo" />
+          <input
+            type="input"
+            placeholder=" ここにタスクを入力"
+            id="todo"
+            class="todo"
+          />
           <label class="hamburger" for="menu_toggle">
             <svg viewBox="0 0 32 32" width="32" height="32">
               <path class="line line-top" d="M4,10 L28,10" />
@@ -80,6 +88,6 @@
     <ul id="history" class="omikuji-history"></ul>
 
     <!-- TypeScript を読み込む（Vite が変換する）。 -->
-    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/main.ts" defer></script>
   </body>
 </html>
