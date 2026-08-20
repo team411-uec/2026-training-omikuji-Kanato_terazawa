@@ -5,6 +5,8 @@
 
 // おみくじの結果を表す型（Union Type）。
 // この6つの文字列以外は使えないので、打ち間違い（例: "第吉"）を防げる。
+import { omikujiState } from "./main";
+
 export type OmikujiResult = "大吉" | "中吉" | "小吉" | "吉" | "末吉" | "凶";
 
 // 各結果を何枚ずつ箱に入れるかの比率。数値は自由に変えてよい。
@@ -20,6 +22,9 @@ export const omikujiRatios: Record<OmikujiResult, number> = {
 };
 const pick_luck = Object.entries(omikujiRatios);
 console.log("Omikuzi運勢取得チャレンジ", pick_luck[5][0]);
+const Luck_Index = Object.keys(omikujiRatios).indexOf("中吉");
+console.log("Omikuzi運勢順番取得チャレンジ", Luck_Index);
+console.log("Omikuzi運勢確率取得チャレンジ", pick_luck[Luck_Index][1]);
 
 // 箱の中身（引けるくじ）。このファイルの中だけで使う。
 // export していないので外部からは直接触れず、下の関数を通して操作する。
@@ -57,6 +62,7 @@ export function drawTodo(): string {
     console.log("タスク無し！やることが無いってのも寂しくない？");
   }
   //タスクリストから空欄を消して再度リスト出力
+
   const TrueTodoValues = getTodoValues().filter((value) => {
     return value != "";
   });
@@ -68,7 +74,35 @@ export function drawTodo(): string {
   //3.大吉～凶の「割合」を合計してsumに代入
   //4.i = i*TrueTodoValues.length/sum,j=j*TrueTodoValues.length/sumを行う
   //5.地域i~jで乱数生成、そのintをとり、その番号でタスクを選ぶ
-
+  if (omikujiState.result != null) {
+    //1.2.を行う
+    const LuckNumber = Object.keys(omikujiRatios).indexOf(omikujiState.result!); //indexOfでの運勢の順番を調べる
+    let i = 0;
+    let j = 0;
+    let LuckRatioSum = 0;
+    console.log("うおｗ", LuckNumber);
+    for (let n: number = LuckNumber; n >= 0; n--) {
+      console.log("n=", n);
+      const pick_luck = Object.entries(omikujiRatios); //下記のようにpick_luck[a][b]で中身が見れるようにする
+      console.log("pick_luck", pick_luck[n][1]);
+      j = j + pick_luck[n][1];
+    }
+    for (let n: number = LuckNumber - 1; n >= 0; n--) {
+      console.log("n=", n);
+      const pick_luck = Object.entries(omikujiRatios); //下記のようにpick_luck[a][b]で中身が見れるようにする
+      console.log("pick_luck", pick_luck[n][1]);
+      i = i + pick_luck[n][1];
+    }
+    //3.を行う
+    for (let n: number = pick_luck.length - 1; n >= 0; n--) {
+      LuckRatioSum = LuckRatioSum + pick_luck[n][1];
+    }
+    i = (i * TrueTodoValues.length) / LuckRatioSum;
+    j = (j * TrueTodoValues.length) / LuckRatioSum;
+    console.log("どわｗ", i, j);
+    console.log("pick_luck.length", pick_luck.length);
+    console.log("sum", LuckRatioSum);
+  }
   const randomIdxTodo = Math.floor(Math.random() * TrueTodoValues.length);
   const drawnTodo = TrueTodoValues[randomIdxTodo];
   console.log(drawnTodo, randomIdxTodo, Math.random() * TrueTodoValues.length);

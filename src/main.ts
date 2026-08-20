@@ -3,9 +3,18 @@
 // おみくじ箱を用意し、ボタンのクリックで reset / draw を呼び、結果を描画層に渡す。
 // この層は完成済み（ステップ1で render.ts を実装すれば動く）。
 
-import { resetOmikuji, drawOmikuji, drawTodo } from "./omikuji";
+import {
+  resetOmikuji,
+  drawOmikuji,
+  drawTodo,
+  type OmikujiResult,
+} from "./omikuji";
 import { renderResult, renderResultTodo } from "./render";
 import { addTodo } from "./omikuji";
+
+export const omikujiState = {
+  result: null as OmikujiResult | null,
+};
 
 function main(): void {
   // おみくじ箱を用意する（1回呼ぶと、くじが入った状態になる）。
@@ -16,10 +25,11 @@ function main(): void {
   const addButton = document.getElementById("add-button");
 
   drawButton?.addEventListener("click", () => {
-    const result = drawOmikuji();
+    omikujiState.result = drawOmikuji();
+
     const resultTodo = drawTodo();
     // render.ts の renderResult を実装すると、ここで画面に結果が出る（ステップ1）。
-    renderResult(result);
+    renderResult(omikujiState.result);
 
     renderResultTodo(resultTodo);
   });
@@ -35,4 +45,5 @@ function main(): void {
     addTodo();
   });
 }
+
 main();

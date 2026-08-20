@@ -30,7 +30,6 @@ export function renderResult(result: OmikujiResult | null): void {
 }
 //タスクの選択結果表示
 export function renderResultTodo(result: string): void {
-  drawTodo();
   if (result != undefined) {
     resultTodo.textContent = `${result}`;
   } else {
