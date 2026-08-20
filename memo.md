@@ -63,3 +63,8 @@ containerとして登録した親要素の先頭に子要素としてclonedDiv�
 ## container.appendChild(clonedDiv);
 
 上とは逆に、最後にclonedDivを追加する。
+
+## const entries = Object.entries(omikujiRatios);
+
+entriesは静的メソッドで、与えられたオブジェクトが所有する、文字列をキーとした列挙可能なプロパティのキーと値の組の配列を返す。
+Recordは順番を保証しないなどの制約があるけどデータなら順番があるので無理やりとる形。

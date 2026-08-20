@@ -9,14 +9,17 @@ export type OmikujiResult = "大吉" | "中吉" | "小吉" | "吉" | "末吉" | 
 
 // 各結果を何枚ずつ箱に入れるかの比率。数値は自由に変えてよい。
 //下記の変更(splice削除)により運勢の比率となった
+
 export const omikujiRatios: Record<OmikujiResult, number> = {
-  大吉: 5,
-  中吉: 15,
-  小吉: 20,
-  吉: 30,
-  末吉: 20,
-  凶: 10,
+  大吉: 0.05,
+  中吉: 0.15,
+  小吉: 0.2,
+  吉: 0.3,
+  末吉: 0.2,
+  凶: 0.1,
 };
+const pick_luck = Object.entries(omikujiRatios);
+console.log("Omikuzi運勢取得チャレンジ", pick_luck[5][0]);
 
 // 箱の中身（引けるくじ）。このファイルの中だけで使う。
 // export していないので外部からは直接触れず、下の関数を通して操作する。
@@ -26,26 +29,18 @@ let tickets: OmikujiResult[] = [];
 //「完了！」ボタンでは使わないけど最初のくじの割り振りに要る
 export function resetOmikuji(): void {
   tickets = [];
-
   for (const [result, count] of Object.entries(omikujiRatios)) {
     for (let i = 0; i < count; i++) {
       // Object.entries だとキーが string 扱いになるので as で元の型に戻す。
       tickets.push(result as OmikujiResult);
     }
   }
-
   console.log(`おみくじ箱をリセットしました。（合計 ${tickets.length} 枚）`);
   console.log(tickets);
 }
 
 // 箱からランダムに1枚引いて返す。空のときは null を返す。
-//前半はタスク選択処理
 export function drawOmikuji(): OmikujiResult | null {
-  // if (tickets.length === 0) {
-  //   console.log("もうおみくじ箱は空っぽです！リセットしてください。");
-  //   return null;
-  // }
-
   const randomIdx = Math.floor(Math.random() * tickets.length);
   // splice は抜き出した要素の配列を返すので、その 0 番目を取り出す。
   //const drawnTicket = tickets.splice(randomIdx, 1)[0];
@@ -65,7 +60,15 @@ export function drawTodo(): string {
   const TrueTodoValues = getTodoValues().filter((value) => {
     return value != "";
   });
-  //下記のrandomIdx処理に倣う
+  //重み付き抽選の実装
+  //なんか運勢が決まったら
+  //1.大吉を始点としてその運勢の順番を調べる
+  //2.その順番から若い順番の「割合」を全部足したものをj,その順番だけを足してないものをiとする
+  //例えば「小吉」の場合(i,j)=(0.2,0.4)、大吉の場合(0,0.05)となる
+  //3.大吉～凶の「割合」を合計してsumに代入
+  //4.i = i*TrueTodoValues.length/sum,j=j*TrueTodoValues.length/sumを行う
+  //5.地域i~jで乱数生成、そのintをとり、その番号でタスクを選ぶ
+
   const randomIdxTodo = Math.floor(Math.random() * TrueTodoValues.length);
   const drawnTodo = TrueTodoValues[randomIdxTodo];
   console.log(drawnTodo, randomIdxTodo, Math.random() * TrueTodoValues.length);
@@ -90,7 +93,8 @@ export function getTodoValues(): string[] {
   return Array.from(inputs).map((input) => input.value.trim());
   //   .filter((value) => value !== "");
 }
-
+//タスクを追加ボタン
+//ボタンを押すと空白の欄が生える
 export function addTodo(): void {
   console.log(getTodoValues());
   const brank = getTodoValues().includes(""); //getTodoValuesに空欄があったらタスク追加は無効
