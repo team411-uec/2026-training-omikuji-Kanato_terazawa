@@ -74,43 +74,45 @@ export function drawTodo(): string {
   //3.大吉～凶の「割合」を合計してsumに代入
   //4.i = i*TrueTodoValues.length/sum,j=j*TrueTodoValues.length/sumを行う
   //5.地域i~jで乱数生成、そのintをとり、その番号でタスクを選ぶ
-  if (omikujiState.result != null) {
-    //1.2.を行う
-    const LuckNumber = Object.keys(omikujiRatios).indexOf(omikujiState.result!); //indexOfでの運勢の順番を調べる
-    let i = 0;
-    let j = 0;
-    let LuckRatioSum = 0;
-    console.log("うおｗ", LuckNumber);
-    for (let n: number = LuckNumber; n >= 0; n--) {
-      console.log("n=", n);
-      const pick_luck = Object.entries(omikujiRatios); //下記のようにpick_luck[a][b]で中身が見れるようにする
-      console.log("pick_luck", pick_luck[n][1]);
-      j = j + pick_luck[n][1];
-    }
-    for (let n: number = LuckNumber - 1; n >= 0; n--) {
-      console.log("n=", n);
-      const pick_luck = Object.entries(omikujiRatios); //下記のようにpick_luck[a][b]で中身が見れるようにする
-      console.log("pick_luck", pick_luck[n][1]);
-      i = i + pick_luck[n][1];
-    }
-    //3.を行う
-    for (let n: number = pick_luck.length - 1; n >= 0; n--) {
-      LuckRatioSum = LuckRatioSum + pick_luck[n][1];
-    }
-    i = (i * TrueTodoValues.length) / LuckRatioSum;
-    j = (j * TrueTodoValues.length) / LuckRatioSum;
-    console.log("どわｗ", i, j);
-    console.log("pick_luck.length", pick_luck.length);
-    console.log("sum", LuckRatioSum);
-  }
-  const randomIdxTodo = Math.floor(Math.random() * TrueTodoValues.length);
-  const drawnTodo = TrueTodoValues[randomIdxTodo];
-  console.log(drawnTodo, randomIdxTodo, Math.random() * TrueTodoValues.length);
-  console.log("タスクリスト", getTodoValues());
-  console.log("タスクリスト長さ", getTodoValues().length);
-  console.log("空欄抜きTodo", TrueTodoValues);
-  console.log("空欄抜きTodo長さ", TrueTodoValues.length);
 
+  //1.2.を行う
+  const LuckNumber = Object.keys(omikujiRatios).indexOf(omikujiState.result!); //indexOfでの運勢の順番を調べる
+  let i = 0;
+  let j = 0;
+  let LuckRatioSum = 0;
+  //console.log("出た運勢の番号", LuckNumber);
+  for (let n: number = LuckNumber; n >= 0; n--) {
+    // console.log("n=", n);
+    const pick_luck = Object.entries(omikujiRatios); //下記のようにpick_luck[a][b]で中身が見れるようにする
+    //console.log("pick_luck", pick_luck[n][1]);
+    j = j + pick_luck[n][1];
+  }
+  for (let n: number = LuckNumber - 1; n >= 0; n--) {
+    //  console.log("n=", n);
+    const pick_luck = Object.entries(omikujiRatios); //下記のようにpick_luck[a][b]で中身が見れるようにする
+    // console.log("pick_luck", pick_luck[n][1]);
+    i = i + pick_luck[n][1];
+  }
+  //3.を行う
+  for (let n: number = pick_luck.length - 1; n >= 0; n--) {
+    LuckRatioSum = LuckRatioSum + pick_luck[n][1];
+  }
+  //4.を行う
+  i = (i * TrueTodoValues.length) / LuckRatioSum;
+  j = (j * TrueTodoValues.length) / LuckRatioSum;
+  //console.log("地域i,j", i, j);
+
+  // console.log("pick_luck.length", pick_luck.length);
+  // console.log("sum", LuckRatioSum);
+  //5.を行う　floorは少数切り捨ての意
+  const randomIdxTodo = Math.floor(Math.random() * (j - i) + i);
+  const drawnTodo = TrueTodoValues[randomIdxTodo];
+  console.log(drawnTodo); //randomIdxTodo, Math.random() * TrueTodoValues.length);
+  // console.log("タスクリスト", getTodoValues());
+  // console.log("タスクリスト長さ", getTodoValues().length);
+  // console.log("空欄抜きTodo", TrueTodoValues);
+  // console.log("空欄抜きTodo長さ", TrueTodoValues.length);
+  //console.log("i=", i, "j=", j, "random=", randomIdxTodo);
   return drawnTodo;
 }
 
