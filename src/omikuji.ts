@@ -5,7 +5,6 @@
 
 // おみくじの結果を表す型（Union Type）。
 // この6つの文字列以外は使えないので、打ち間違い（例: "第吉"）を防げる。
-import { omikujiState } from "./main";
 
 export type OmikujiResult = "大吉" | "中吉" | "小吉" | "吉" | "末吉" | "凶";
 
@@ -13,48 +12,40 @@ export type OmikujiResult = "大吉" | "中吉" | "小吉" | "吉" | "末吉" | 
 //下記の変更(splice削除)により運勢の比率となった
 
 export const omikujiRatios: Record<OmikujiResult, number> = {
-  大吉: 0.05,
-  中吉: 0.15,
-  小吉: 0.2,
-  吉: 0.3,
-  末吉: 0.2,
-  凶: 0.1,
+  大吉: 5,
+  中吉: 15,
+  小吉: 20,
+  吉: 30,
+  末吉: 20,
+  凶: 10,
 };
-const pick_luck = Object.entries(omikujiRatios);
-console.log("Omikuzi運勢取得チャレンジ", pick_luck[5][0]);
-const Luck_Index = Object.keys(omikujiRatios).indexOf("中吉");
-console.log("Omikuzi運勢順番取得チャレンジ", Luck_Index);
-console.log("Omikuzi運勢確率取得チャレンジ", pick_luck[Luck_Index][1]);
 
-// 箱の中身（引けるくじ）。このファイルの中だけで使う。
-// export していないので外部からは直接触れず、下の関数を通して操作する。
-let tickets: OmikujiResult[] = [];
-
-// 箱の中身を omikujiRatios の比率どおりに入れ直す。
-//「完了！」ボタンでは使わないけど最初のくじの割り振りに要る
-export function resetOmikuji(): void {
-  tickets = [];
-  for (const [result, count] of Object.entries(omikujiRatios)) {
-    for (let i = 0; i < count; i++) {
-      // Object.entries だとキーが string 扱いになるので as で元の型に戻す。
-      tickets.push(result as OmikujiResult);
-    }
+//修正8/21によりこのRecordから値域を作る必要が出てきた
+//下記の運勢抽選で使う部品たち
+const pick_luck = Object.entries(omikujiRatios) as [OmikujiResult, number][];
+let LuckRatioSum = 0;
+for (let n: number = pick_luck.length - 1; n >= 0; n--) {
+  LuckRatioSum = LuckRatioSum + pick_luck[n][1];
+}
+console.log(pick_luck.length);
+for (let i = pick_luck.length - 1; i >= 0; i--) {
+  for (let j = i - 1; j >= 0; j--) {
+    pick_luck[i][1] = pick_luck[i][1] + pick_luck[j][1];
   }
-  console.log(`おみくじ箱をリセットしました。（合計 ${tickets.length} 枚）`);
-  console.log(tickets);
 }
+console.log(pick_luck);
 
-// 箱からランダムに1枚引いて返す。空のときは null を返す。
-export function drawOmikuji(): OmikujiResult | null {
-  const randomIdx = Math.floor(Math.random() * tickets.length);
-  // splice は抜き出した要素の配列を返すので、その 0 番目を取り出す。
-  //const drawnTicket = tickets.splice(randomIdx, 1)[0];
-  //変更！くじの枚数はここでは決めずにタスクの数で決めるので、
-  // spliceによるカード削除を止めてdrawnTicketsを代替
-  const drawnTicket = tickets[randomIdx];
-  //console.log(tickets);
-  return drawnTicket;
-}
+console.log("LuckRatioSum=", LuckRatioSum);
+//    for (let i = 0; i < count; i++) {
+//console.log("Omikuzi運勢取得チャレンジ", pick_luck[5][0]);
+//const Luck_Index = Object.keys(omikujiRatios).indexOf("中吉");
+//console.log("Omikuzi運勢順番取得チャレンジ", Luck_Index);
+//console.log("Omikuzi運勢確率取得チャレンジ", pick_luck[Luck_Index][1]);
+
+//引いたタスクの番号をこの箱に入れてエクスポート
+export const randomIdxTodo: { result: number | null } = {
+  result: null!,
+};
 
 export function drawTodo(): string {
   const brank = getTodoValues().includes("");
@@ -66,54 +57,69 @@ export function drawTodo(): string {
   const TrueTodoValues = getTodoValues().filter((value) => {
     return value != "";
   });
-  //重み付き抽選の実装
-  //なんか運勢が決まったら
-  //1.大吉を始点としてその運勢の順番を調べる
-  //2.その順番から若い順番の「割合」を全部足したものをj,その順番だけを足してないものをiとする
-  //例えば「小吉」の場合(i,j)=(0.2,0.4)、大吉の場合(0,0.05)となる
-  //3.大吉～凶の「割合」を合計してsumに代入
-  //4.i = i*TrueTodoValues.length/sum,j=j*TrueTodoValues.length/sumを行う
-  //5.地域i~jで乱数生成、そのintをとり、その番号でタスクを選ぶ
+  //重み付き抽選の実装※大規模改修！！！
 
-  //1.2.を行う
-  const LuckNumber = Object.keys(omikujiRatios).indexOf(omikujiState.result!); //indexOfでの運勢の順番を調べる
-  let i = 0;
-  let j = 0;
-  let LuckRatioSum = 0;
-  //console.log("出た運勢の番号", LuckNumber);
-  for (let n: number = LuckNumber; n >= 0; n--) {
-    // console.log("n=", n);
-    const pick_luck = Object.entries(omikujiRatios); //下記のようにpick_luck[a][b]で中身が見れるようにする
-    //console.log("pick_luck", pick_luck[n][1]);
-    j = j + pick_luck[n][1];
-  }
-  for (let n: number = LuckNumber - 1; n >= 0; n--) {
-    //  console.log("n=", n);
-    const pick_luck = Object.entries(omikujiRatios); //下記のようにpick_luck[a][b]で中身が見れるようにする
-    // console.log("pick_luck", pick_luck[n][1]);
-    i = i + pick_luck[n][1];
-  }
-  //3.を行う
-  for (let n: number = pick_luck.length - 1; n >= 0; n--) {
-    LuckRatioSum = LuckRatioSum + pick_luck[n][1];
-  }
-  //4.を行う
-  i = (i * TrueTodoValues.length) / LuckRatioSum;
-  j = (j * TrueTodoValues.length) / LuckRatioSum;
-  //console.log("地域i,j", i, j);
-
-  // console.log("pick_luck.length", pick_luck.length);
-  // console.log("sum", LuckRatioSum);
-  //5.を行う　floorは少数切り捨ての意
-  const randomIdxTodo = Math.floor(Math.random() * (j - i) + i);
-  const drawnTodo = TrueTodoValues[randomIdxTodo];
-  console.log(drawnTodo); //randomIdxTodo, Math.random() * TrueTodoValues.length);
-  // console.log("タスクリスト", getTodoValues());
-  // console.log("タスクリスト長さ", getTodoValues().length);
-  // console.log("空欄抜きTodo", TrueTodoValues);
-  // console.log("空欄抜きTodo長さ", TrueTodoValues.length);
-  //console.log("i=", i, "j=", j, "random=", randomIdxTodo);
+  randomIdxTodo.result = Math.floor(Math.random() * TrueTodoValues.length);
+  const drawnTodo = TrueTodoValues[randomIdxTodo.result];
+  //console.log(
+  //  "drawnTodo, randomIdxTodo.result",
+  //  drawnTodo,
+  //  randomIdxTodo.result,
+  //);
   return drawnTodo;
+}
+// 箱の中身（引けるくじ）。このファイルの中だけで使う。
+// export していないので外部からは直接触れず、下の関数を通して操作する。
+let tickets: OmikujiResult[] = [];
+
+// 箱の中身を omikujiRatios の比率どおりに入れ直す。
+
+//「完了！」ボタンでは使わないけど最初のくじの割り振りに要る
+//修正！完璧にいらんくなった
+//export function resetOmikuji(): void {
+//  tickets = [];
+//  for (const [result, count] of Object.entries(omikujiRatios)) {
+//    for (let i = 0; i < count; i++) {
+//      // Object.entries だとキーが string 扱いになるので as で元の型に戻す。
+//      tickets.push(result as OmikujiResult);
+//    }
+//  }
+//  console.log(`おみくじ箱をリセットしました。（合計 ${tickets.length} 枚）`);
+//  console.log(tickets);
+//}
+
+//おみくじの処理
+// 箱からランダムに1枚引いて返す。空のときは null を返す。
+
+//重み付き抽選の実装
+//なんかrandomIdxTodoが決まったら
+//1.値域をrandomIdxTodo～randomIdxTodo+1に設定
+//2.大吉～凶の「割合」を合計してLuckRatioSumに代入
+//3.1.の値域*LuckRatioSum/総タスク数(t)を行う
+//4.3の地域で乱数生成、運勢ごとに割り当てられた値域に乱数が入ったらその運勢を選択
+export function drawOmikuji(): OmikujiResult {
+  const brank = getTodoValues().includes("");
+  const TrueTodoValues = getTodoValues().filter((value) => {
+    return value != "";
+  });
+  let i = 0;
+  let pick_luck_resultIdx = 0;
+  if (getTodoValues().length == 1 && brank) {
+    i = 0;
+  } else {
+    i = randomIdxTodo.result!;
+    const step = LuckRatioSum / TrueTodoValues.length;
+    const randomValue = i * step + Math.random() * step;
+    // console.log("randomValue=", randomValue);
+    for (const [result, threshold] of pick_luck) {
+      // 乱数が閾値を「下回った」最初の運勢を返す
+      if (randomValue <= threshold) {
+        return result;
+      }
+    }
+    console.log("end", pick_luck_resultIdx);
+  }
+  return "凶"; // フォールバック
 }
 
 // 拡張ポイント（ステップ2以降）。必要になったら足す。
