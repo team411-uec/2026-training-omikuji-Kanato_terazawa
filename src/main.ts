@@ -7,10 +7,11 @@ import {
   //resetOmikuji,
   drawOmikuji,
   drawTodo,
+  donetodo,
   type OmikujiResult,
 } from "./omikuji";
 import { renderResult, renderResultTodo } from "./render";
-import { addTodo } from "./omikuji";
+import { addTodo } from "./render";
 
 export const omikujiState = {
   result: null as OmikujiResult | null,
@@ -32,9 +33,8 @@ function main(): void {
   });
 
   doneButton?.addEventListener("click", () => {
-    // resetOmikuji();
-    // 表示を初期状態（結果なし）に戻す。
     renderResult(null);
+    donetodo();
   });
 
   addButton?.addEventListener("click", () => {

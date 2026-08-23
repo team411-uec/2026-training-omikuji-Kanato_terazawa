@@ -4,6 +4,7 @@
 
 import Sortable from "sortablejs";
 import type { OmikujiResult } from "./omikuji";
+import { getTodoValues } from "./omikuji";
 import { drawTodo } from "./omikuji";
 const resultElement = document.getElementById("result")!;
 const resultTodo = document.getElementById("task-result")!;
@@ -50,4 +51,20 @@ if (inputColumn) {
   });
 }
 
-//「タスクを追加」ボタン
+//「タスクを追加」処理
+export function addTodo(): void {
+  const brank = getTodoValues().includes(""); //タスク入力
+  console.log(brank);
+  const originalDiv = document.getElementById("todo_set"); //タスク入力
+  const container = document.getElementById("input_column"); //タスク入力表
+  if (originalDiv && container && !brank) {
+    //(getTodoValues)に空欄があったらタスク追加は無効
+    const clonedDiv = originalDiv.cloneNode(true) as HTMLDivElement; //要素を中身ごと丸ごと複製する (true で子要素もすべてコピー)
+    clonedDiv.removeAttribute("id");
+    const clonedInput = clonedDiv.querySelector("#todo"); //複製した中身のinputのIDを#todoに設定
+    if (clonedInput) {
+      (clonedInput as HTMLInputElement).value = ""; //コピーしたinputの中身を空にする
+    }
+    container.prepend(clonedDiv);
+  }
+}
