@@ -10,7 +10,7 @@ import {
   type OmikujiResult,
 } from "./omikuji";
 import { renderResult, renderResulttask, donetask } from "./render";
-import { addtask, Highlight } from "./render";
+import { addtask, Highlight, Enter_add_task } from "./render";
 
 export const omikujiState = {
   result: null as OmikujiResult | null,
@@ -42,5 +42,15 @@ function main(): void {
     addtask();
   });
 }
+
+//Enter押したら空欄タスク欄をつくる
+// 画面全体（window）のkeydownイベントに登録して実行する
+window.addEventListener("keydown", (e: KeyboardEvent) => {
+  // 日本語入力の確定Enterは無視する
+  if (e.isComposing || e.key !== "Enter") return;
+
+  // Enterが押されたら関数を実行
+  Enter_add_task();
+});
 
 main();

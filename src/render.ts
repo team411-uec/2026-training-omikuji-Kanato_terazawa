@@ -181,3 +181,20 @@ export function Highlight(): void {
     }
   }
 }
+
+export function Enter_add_task(): void {
+  const activeinputTasks =
+    document.querySelector<HTMLInputElement>(".task:focus");
+  const taskSection = activeinputTasks!.closest<HTMLElement>(".input_section");
+
+  if (activeinputTasks) {
+    //タスク追加処理の一部を流用
+    const originalDiv = document.getElementById("task_set"); //タスク入力
+    const clonedDiv = originalDiv!.cloneNode(true) as HTMLDivElement; //要素を中身ごと丸ごと複製する (true で子要素もすべてコピー)
+    clonedDiv.removeAttribute("id");
+    const clonedInput = clonedDiv.querySelector<HTMLInputElement>(".task");
+    originalDiv?.classList.replace("finishedtask_section", "input_section");
+    taskSection!.after(clonedDiv);
+    clonedInput!.focus();
+  }
+}
