@@ -37,12 +37,70 @@ const inputColumn = document.getElementById("input_column");
 if (inputColumn) {
   new Sortable(inputColumn, {
     handle: "svg", // handle's selector
+    selectedClass: "selected", // The class applied to the selected items
+    group: {
+      name: "shared",
+    },
+    fallbackTolerance: 3, // So that we can select items on mobile
     animation: 150,
+    onAdd: (event) => {
+      updateTaskClasses(event.to, "input_section");
+      emptytasksort();
+    },
+  });
+}
+const finishedtaskColumn = document.getElementById("accordion-content");
+if (finishedtaskColumn) {
+  if (gettaskValues().length == 1) {
+    //全部タスク入力欄から持っていかれるのを防止
+    new Sortable(finishedtaskColumn, {
+      group: {
+        name: "shared",
+        put: () => gettaskValues().length > 1,
+      },
+      handle: "svg", // handle's selector
+      selectedClass: "selected", // The class applied to the selected items
+      fallbackTolerance: 3, // So that we can select items on mobile
+      animation: 150,
+      onAdd: (event) => {
+        updateTaskClasses(event.to, "finishedtask_section");
+        emptytasksort();
+        addtask();
+      },
+    });
+  }
+}
+
+// タスクclassのアップデート（SortableJSに対応）
+function updateTaskClasses(
+  container: HTMLElement,
+  className: "input_section" | "finishedtask_section",
+): void {
+  Array.from(container.children).forEach((child) => {
+    child.classList.remove("input_section", "finishedtask_section");
+    child.classList.add(className);
+  });
+}
+function emptytasksort(): void {
+  const brank = gettaskValues().some((task) => task.text === "");
+
+  //if (gettaskValues().length !== 1 && !brank) {
+  const inputSections = document.querySelectorAll(
+    "#input_column .input_section",
+  );
+  inputSections.forEach((section) => {
+    const input = section.querySelector<HTMLInputElement>(".task");
+
+    if (input?.value.trim() === "") {
+      section.remove();
+    }
   });
 }
 
+//}
 //「タスクを追加」処理
 export function addtask(): void {
+  emptytasksort();
   const brank = gettaskValues().some((task) => task.text === "");
   console.log(brank);
   console.log(gettaskValues());
@@ -50,9 +108,12 @@ export function addtask(): void {
   const container = document.getElementById("input_column"); //タスク入力表
   if (originalDiv && container && !brank) {
     //(gettaskValues)に空欄があったらタスク追加は無効
+
     const clonedDiv = originalDiv.cloneNode(true) as HTMLDivElement; //要素を中身ごと丸ごと複製する (true で子要素もすべてコピー)
     clonedDiv.removeAttribute("id");
     const clonedInput = clonedDiv.querySelector("#task"); //複製した中身のinputのIDを#taskに設定
+    originalDiv?.classList.replace("finishedtask_section", "input_section");
+
     if (clonedInput) {
       (clonedInput as HTMLInputElement).value = ""; //コピーしたinputの中身を空にする
     }
@@ -70,6 +131,12 @@ export function donetask(): void {
   );
   const last_task = document.querySelector(`.input_column div:nth-child(1)`);
   const finishedtasklist = document.getElementById("accordion-content");
+  const inputTasks = document.querySelectorAll<HTMLElement>(
+    "#input_column .input_section",
+  );
+  inputTasks.forEach((task) => {
+    task.style.removeProperty("outline"); //この処理が走るごとに、前の色変更をリセット(下のHighlithtの一部を利用)
+  });
 
   //完了ボタン二回目以降の連打を無視
   if (resultElement.textContent !== "_") {
@@ -93,5 +160,24 @@ export function donetask(): void {
     );
     console.log("uow", transfered_task);
     transfered_task?.classList.replace("input_section", "finishedtask_section");
+  }
+}
+
+export function Highlight(): void {
+  const inputTasks = document.querySelectorAll<HTMLElement>(
+    "#input_column .input_section",
+  );
+  inputTasks.forEach((task) => {
+    task.style.removeProperty("outline"); //この処理が走るごとに、前の色変更をリセット
+  });
+  if (resultElement.textContent !== "_") {
+    const idx = randomIdxtask_div.result;
+
+    const selected_task = document.querySelector<HTMLElement>(
+      `.input_column div:nth-child(${idx! + 1})`,
+    );
+    if (selected_task) {
+      selected_task.style.outline = "1px solid #d4d4d4";
+    }
   }
 }

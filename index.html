@@ -17,7 +17,7 @@
     <h1>運任せtask</h1>
     <p>あなたの「運」で優先すべきタスクを決定。</p>
     <p>簡単なタスクを大吉の方に、つらいタスクを凶の方に割り当てよう。</p>
-    <p>入力欄右の「≡」をドラッグして並べ替え</p>
+    <p>入力欄右の「≡」をドラッグして並べ替え（複数選択もできるよ）</p>
     <div class="omikuji-result">
       <div>あなたの運勢</div>
       <div id="result" class="luck">_</div>
@@ -66,7 +66,7 @@
       </div>
 
       <div id="input_column" class="input_column">
-        <div id="task_set" class="input_section">
+        <div class="input_section">
           <input
             type="input"
             placeholder=" ここにタスクを入力"
@@ -85,15 +85,30 @@
       <!--完了したタスクまとめ-->
       <details class="finishedtask_column">
         <summary class="finishedtask-title">完了したタスク</summary>
-        <div class="accordion-content" id="accordion-content">
-          <div class="finishedtask_section">てすと</div>
-          <div class="finishedtask_section">てすと</div>
-        </div>
+        <div class="accordion-content" id="accordion-content"></div>
       </details>
     </div>
 
     <div id="remaining" class="omikuji-remaining"></div>
     <ul id="history" class="omikuji-history"></ul>
+    <!--コピー元のタスク入力欄を保存-->
+    <div id="container">
+      <div id="task_set" class="input_section">
+        <input
+          type="input"
+          placeholder=" ここにタスクを入力"
+          id="task"
+          class="task"
+        />
+        <label class="hamburger" for="menu_toggle">
+          <svg viewBox="0 0 32 32" width="32" height="32">
+            <path class="line line-top" d="M4,10 L28,10" />
+            <path class="line line-middle" d="M4,16 L28,16" />
+            <path class="line line-bottom" d="M4,22 L28,22" />
+          </svg>
+        </label>
+      </div>
+    </div>
 
     <!-- TypeScript を読み込む（Vite が変換する）。 -->
     <script type="module" src="/src/main.ts" defer></script>

@@ -10,7 +10,7 @@ import {
   type OmikujiResult,
 } from "./omikuji";
 import { renderResult, renderResulttask, donetask } from "./render";
-import { addtask } from "./render";
+import { addtask, Highlight } from "./render";
 
 export const omikujiState = {
   result: null as OmikujiResult | null,
@@ -29,6 +29,7 @@ function main(): void {
 
     renderResulttask(drawtask()!);
     renderResult(drawOmikuji());
+    Highlight();
   });
 
   doneButton?.addEventListener("click", () => {

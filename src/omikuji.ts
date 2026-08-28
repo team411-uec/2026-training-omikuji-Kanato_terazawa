@@ -121,5 +121,5 @@ export function drawOmikuji(): OmikujiResult {
       }
     }
   }
-  return "凶"; // フォールバック
+  return "大吉"; // フォールバック
 }

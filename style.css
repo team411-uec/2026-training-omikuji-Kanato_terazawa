@@ -262,3 +262,11 @@ input:focus {
   border-radius: 0.3em;
   text-decoration: line-through;
 }
+
+.selected {
+  outline: 1px solid #fff;
+}
+
+#container {
+  display: none;
+}
