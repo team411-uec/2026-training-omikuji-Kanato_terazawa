@@ -33,53 +33,73 @@ for (let i = pick_luck.length - 1; i >= 0; i--) {
 }
 console.log(pick_luck);
 
+//引いたタスクの番号をこの箱に入れてエクスポート
+export const randomIdxtask: { result: number | null } = {
+  result: null!,
+};
+export const randomIdxtask_div: { result: number | null } = {
+  result: null!,
+};
 //全タスクをリストとして取得（内容はmemo.mdを参照）
-export function getTodoValues(): string[] {
-  const inputs = document.querySelectorAll<HTMLInputElement>(".todo");
-  return Array.from(inputs).map((input) => input.value.trim());
+type TaskItem = {
+  id: number;
+  text: string;
+};
+export function gettaskValues(): TaskItem[] {
+  const inputs = document.querySelectorAll<HTMLInputElement>(
+    ".input_column .input_section .task",
+  );
+  return Array.from(inputs).map((input, index) => {
+    return {
+      id: index,
+      text: input.value.trim(),
+    };
+  });
   //   .filter((value) => value !== "");
 }
 
-//引いたタスクの番号をこの箱に入れてエクスポート
-export const randomIdxTodo: { result: number | null } = {
-  result: null!,
-};
-
-export function drawTodo(): string {
-  const brank = getTodoValues().includes("");
-  if (getTodoValues().length == 1 && brank) {
-    console.log("タスク無し！やることが無いってのも寂しくない？");
-  }
+//タスクリストから空欄を消して再度リスト出力
+//↑もとのタスクの番号が失われるので、二列の表を作って一列目にタスク番号、二列目に空を含むタスクの内容を入れる
+export function drawtask(): string | null {
   //タスクリストから空欄を消して再度リスト出力
-  const TrueTodoValues = getTodoValues().filter((value) => {
-    return value != "";
+  const TruetaskValues = gettaskValues().filter((task) => {
+    return task.text != "";
   });
+  let i = Math.floor(Math.random() * TruetaskValues.length);
 
+  randomIdxtask.result = i;
+  if (TruetaskValues.length === 0) {
+    console.log("タスク無し！やることが無いってのも寂しくない？");
+    randomIdxtask_div.result = null;
+    randomIdxtask.result = null;
+    return null;
+  } else {
+    randomIdxtask_div.result = TruetaskValues[i].id;
+  }
   //タスクリストからランダムにタスクを選ぶ
-  randomIdxTodo.result = Math.floor(Math.random() * TrueTodoValues.length);
-  const drawnTodo = TrueTodoValues[randomIdxTodo.result];
-  return drawnTodo;
+
+  console.log(TruetaskValues[i].id);
+  const drawntask = TruetaskValues[randomIdxtask.result].text;
+  return drawntask;
 }
-// 箱の中身（引けるくじ）。このファイルの中だけで使う。
+
+export // 箱の中身（引けるくじ）。このファイルの中だけで使う。
 // export していないので外部からは直接触れず、下の関数を通して操作する。
 let tickets: OmikujiResult[] = [];
 
-//おみくじの処理
-// 箱からランダムに1枚引いて返す。空のときは null を返す。
-
 //重み付き抽選の実装
-//なんかrandomIdxTodo（ランダムに引かれたタスクの番号）が決まったら
-//1.値域をrandomIdxTodo～randomIdxTodo+1に設定
+//なんかrandomIdxtask（ランダムに引かれたタスクの番号）が決まったら
+//1.値域をrandomIdxtask～randomIdxtask+1に設定
 //2.大吉～凶の「割合」を合計してLuckRatioSumに代入
-//3.1.の値域*LuckRatioSum/総タスク数(TrueTodoValues.length)を行う
+//3.1.の値域*LuckRatioSum/総タスク数(TruetaskValues.length)を行う
 //4.3の地域で乱数生成、運勢ごとに割り当てられた値域(上の累積度数pick_luckより)に乱数が入ったらその運勢を選択
 export function drawOmikuji(): OmikujiResult {
-  const brank = getTodoValues().includes("");
-  const TrueTodoValues = getTodoValues().filter((value) => {
-    return value != ""; //タスクを表にまとめたgetTodoValuesから空欄を抜く
+  const brank = gettaskValues().some((task) => task.text === ""); //タスク列の誰かが空欄""を持っているかを判定
+  const TruetaskValues = gettaskValues().filter((task) => {
+    return task.text != ""; //タスクを表にまとめたgettaskValuesから空欄を抜く
   });
   let i = 0;
-  if (getTodoValues().length == 1 && brank) {
+  if (gettaskValues().length == 1 && brank) {
     //タスクリストが空の時、無作為におみくじを引く
     i = 0;
     const randomValue = Math.random() * LuckRatioSum;
@@ -89,8 +109,8 @@ export function drawOmikuji(): OmikujiResult {
       }
     }
   } else {
-    i = randomIdxTodo.result!;
-    const step = LuckRatioSum / TrueTodoValues.length;
+    i = randomIdxtask.result!;
+    const step = LuckRatioSum / TruetaskValues.length;
     const randomValue = i * step + Math.random() * step;
     // console.log("randomValue=", randomValue);
     for (const [result, threshold] of pick_luck) {
@@ -102,13 +122,4 @@ export function drawOmikuji(): OmikujiResult {
     }
   }
   return "凶"; // フォールバック
-}
-
-//「完了！」ボタン実装
-export function donetodo(): void {
-  console.log("done", randomIdxTodo.result);
-  if (randomIdxTodo.result == null) {
-    //タスクが無い場合は無効
-    console.log("タスク空欄を検知");
-  }
 }

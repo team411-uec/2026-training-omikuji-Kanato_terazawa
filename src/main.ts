@@ -6,12 +6,11 @@
 import {
   //resetOmikuji,
   drawOmikuji,
-  drawTodo,
-  donetodo,
+  drawtask,
   type OmikujiResult,
 } from "./omikuji";
-import { renderResult, renderResultTodo } from "./render";
-import { addTodo } from "./render";
+import { renderResult, renderResulttask, donetask } from "./render";
+import { addtask } from "./render";
 
 export const omikujiState = {
   result: null as OmikujiResult | null,
@@ -28,18 +27,18 @@ function main(): void {
   drawButton?.addEventListener("click", () => {
     // render.ts の renderResult を実装すると、ここで画面に結果が出る（ステップ1）。
 
-    renderResultTodo(drawTodo());
+    renderResulttask(drawtask()!);
     renderResult(drawOmikuji());
   });
 
   doneButton?.addEventListener("click", () => {
+    donetask();
     renderResult(null);
-    donetodo();
   });
 
   addButton?.addEventListener("click", () => {
     console.log("add-buttonの押下を検知");
-    addTodo();
+    addtask();
   });
 }
 

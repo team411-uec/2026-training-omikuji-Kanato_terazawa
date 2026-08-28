@@ -238,16 +238,27 @@ input:focus {
 }
 
 /*完了したタスク*/
-.finishedtodo_column {
+.finishedtask_column {
+  display: flex;
+  flex-direction: column;
   grid-column: 1 / 4; /* 横幅いっぱい */
   align-self: flex-end;
-  justify-content: flex-start;
-  cursor: pointer;
 }
-.finishedtodo_section {
-  background: #232c3f;
-  border-radius: 0.3em;
-  height: 2em;
-  justify-content: space-between;
+.accordion-content {
+  display: flex;
+  flex-direction: column;
+  grid-column: 2;
+}
+.finishedtask_section {
+  display: flex;
   align-items: center;
+  color: #fff;
+  background-color: #232c3f;
+  height: 2em;
+  text-align: center;
+  margin: 0.2em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-radius: 0.3em;
+  text-decoration: line-through;
 }

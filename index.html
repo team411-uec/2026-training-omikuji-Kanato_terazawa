@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>運任せTodo</title>
+    <title>運任せtask</title>
 
     <!--
       最小限の見た目だけ整えている（Tailwind は使わない）。
@@ -14,7 +14,7 @@
   </head>
 
   <body>
-    <h1>運任せTodo</h1>
+    <h1>運任せtask</h1>
     <p>あなたの「運」で優先すべきタスクを決定。</p>
     <p>簡単なタスクを大吉の方に、つらいタスクを凶の方に割り当てよう。</p>
     <p>入力欄右の「≡」をドラッグして並べ替え</p>
@@ -66,12 +66,12 @@
       </div>
 
       <div id="input_column" class="input_column">
-        <div id="todo_set" class="input_section">
+        <div id="task_set" class="input_section">
           <input
             type="input"
             placeholder=" ここにタスクを入力"
-            id="todo"
-            class="todo"
+            id="task"
+            class="task"
           />
           <label class="hamburger" for="menu_toggle">
             <svg viewBox="0 0 32 32" width="32" height="32">
@@ -83,10 +83,11 @@
         </div>
       </div>
       <!--完了したタスクまとめ-->
-      <details class="finishedtodo_column">
-        <summary class="finishedtodo-title">完了したタスク</summary>
-        <div class="accordion-content">
-          <div class="finishedtodo_section">てすと</div>
+      <details class="finishedtask_column">
+        <summary class="finishedtask-title">完了したタスク</summary>
+        <div class="accordion-content" id="accordion-content">
+          <div class="finishedtask_section">てすと</div>
+          <div class="finishedtask_section">てすと</div>
         </div>
       </details>
     </div>
