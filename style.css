@@ -262,6 +262,9 @@ input:focus {
   border-radius: 0.3em;
   text-decoration: line-through;
 }
+.finishedtask_section input {
+  text-decoration: line-through;
+}
 
 .selected {
   outline: 1px solid #fff;
