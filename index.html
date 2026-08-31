@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>運任せtask</title>
+
+    <!--
+      最小限の見た目だけ整えている（Tailwind は使わない）。
+      各要素に class（例: omikuji-result）を付けているので、CSS を足して自由に装飾できる。
+      拡張ポイント（ステップ2以降）: 結果やボタンの文言・色を変える（この <style> を編集）。
+    -->
+    <script type="module" crossorigin src="/2026-training-omikuji-Kanato_terazawa/assets/index-BA-vz_Ia.js"></script>
+    <link rel="stylesheet" crossorigin href="/2026-training-omikuji-Kanato_terazawa/assets/index-B6bWVN_h.css">
+  </head>
+
+  <body>
+    <h1>運任せtask</h1>
+    <p>あなたの「運」で優先すべきタスクを決定。</p>
+    <p>簡単なタスクを大吉の方に、つらいタスクを凶の方に割り当てよう。</p>
+    <p>入力欄右の「≡」をドラッグして並べ替え</p>
+    <div class="omikuji-result">
+      <div>あなたの運勢</div>
+      <div id="result" class="luck">_</div>
+      <div class="task_result_section">
+        <span>選ばれたタスク</span>
+        <p id="task-result" class="task-result">__________</p>
+      </div>
+
+      <div class="omikuji-controls">
+        <button
+          id="draw-button"
+          onmousedown="
+            this.classList.add('active-dip');
+            setTimeout(() => this.classList.remove('active-dip'), 200);
+          "
+        >
+          おみくじを引く
+        </button>
+        <button
+          id="done-button"
+          onmousedown="
+            this.classList.add('active-dip');
+            setTimeout(() => this.classList.remove('active-dip'), 200);
+          "
+        >
+          完了！
+        </button>
+      </div>
+    </div>
+    <!--入力したタスクまとめ-->
+    <div class="wrapper">
+      <button
+        class="task_add_button"
+        id="add-button"
+        onmousedown="
+          this.classList.add('active-dip');
+          setTimeout(() => this.classList.remove('active-dip'), 200);
+        "
+      >
+        タスクを追加
+      </button>
+      <div class="gradition">
+        <div class="gradition_daikichi">大<br />吉</div>
+        <div class="vertical_line"></div>
+        <div class="gradition_daikyo">凶</div>
+      </div>
+
+      <div id="input_column" class="input_column">
+        <div class="input_section">
+          <input
+            type="input"
+            placeholder=" ここにタスクを入力"
+            id="task"
+            class="task"
+          />
+          <label class="hamburger" for="menu_toggle">
+            <svg viewBox="0 0 32 32" width="32" height="32">
+              <path class="line line-top" d="M4,10 L28,10" />
+              <path class="line line-middle" d="M4,16 L28,16" />
+              <path class="line line-bottom" d="M4,22 L28,22" />
+            </svg>
+          </label>
+        </div>
+      </div>
+      <!--完了したタスクまとめ-->
+      <details class="finishedtask_column">
+        <summary class="finishedtask-title">完了したタスク</summary>
+        <div class="accordion-content" id="accordion-content"></div>
+      </details>
+    </div>
+
+    <div id="remaining" class="omikuji-remaining"></div>
+    <ul id="history" class="omikuji-history"></ul>
+    <!--コピー元のタスク入力欄を保存-->
+    <div id="container">
+      <div id="task_set" class="input_section">
+        <input
+          type="input"
+          placeholder=" ここにタスクを入力"
+          id="task"
+          class="task"
+        />
+        <label class="hamburger" for="menu_toggle">
+          <svg viewBox="0 0 32 32" width="32" height="32">
+            <path class="line line-top" d="M4,10 L28,10" />
+            <path class="line line-middle" d="M4,16 L28,16" />
+            <path class="line line-bottom" d="M4,22 L28,22" />
+          </svg>
+        </label>
+      </div>
+    </div>
+
+    <!-- TypeScript を読み込む（Vite が変換する）。 -->
+  </body>
+</html>
